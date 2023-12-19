@@ -1,12 +1,17 @@
-import { SlackController } from '../slack/decorator/slack-controller';
-import { Command, EventSubscription } from '../slack/decorator/slack-method';
+import {
+  Command,
+  EventSubscription,
+  Payload,
+  Respond,
+  Say,
+  SlackController,
+} from '../slack';
 import {
   ReactionAddedEvent,
   RespondFn,
   SayFn,
   SlashCommand,
 } from '@slack/bolt';
-import { Payload, Respond, Say } from '../slack/decorator/slack-argument';
 
 @SlackController()
 export class SampleController {

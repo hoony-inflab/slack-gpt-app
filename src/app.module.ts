@@ -6,15 +6,15 @@ import {
 } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 
-import { SLACK_CONTROLLER } from './slack/decorator/slack-controller';
-import { SampleModule } from './sample/sample.module';
 import {
   COMMAND,
+  CommandStrategy,
   EVENT_SUBSCRIPTION,
+  EventSubscriptionStrategy,
+  SLACK_CONTROLLER,
   SlackMethod,
-} from './slack/decorator/slack-method';
-import { EventSubscriptionStrategy } from './slack/method-strategy/event-subscription-strategy';
-import { CommandStrategy } from './slack/method-strategy/command-strategy';
+} from './slack';
+import { SampleModule } from './sample/sample.module';
 import { ConfigSchema } from './configuration/config.schema';
 import { OpenaiModule } from './libs/openai';
 
