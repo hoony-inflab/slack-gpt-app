@@ -4,6 +4,8 @@ import {
   DiscoveryService,
   MetadataScanner,
 } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
+
 import { SLACK_CONTROLLER } from './slack/decorator/slack-controller';
 import { SampleModule } from './sample/sample.module';
 import {
@@ -13,15 +15,17 @@ import {
 } from './slack/decorator/slack-method';
 import { EventSubscriptionStrategy } from './slack/method-strategy/event-subscription-strategy';
 import { CommandStrategy } from './slack/method-strategy/command-strategy';
-import { ConfigModule } from '@nestjs/config';
 import { ConfigSchema } from './configuration/config.schema';
+import { OpenaiModule } from './libs/openai';
 
 @Module({
   imports: [
+    OpenaiModule,
     DiscoveryModule,
     SampleModule,
     ConfigModule.forRoot({
       validationSchema: ConfigSchema,
+      isGlobal: true,
     }),
   ],
   providers: [EventSubscriptionStrategy, CommandStrategy],
