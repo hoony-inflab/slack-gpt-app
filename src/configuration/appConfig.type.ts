@@ -3,4 +3,5 @@ export type AppConfigType = {
   SIGNING_SECRET: string;
   BOT_OAUTH_TOKEN: string;
   OPENAI_API_KEY: string;
+  APP_ID: string;
 };

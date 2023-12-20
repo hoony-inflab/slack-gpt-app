@@ -1,8 +1,8 @@
 import { Client, Event, EventSubscription, SlackController } from '../slack';
 import { AppMentionEvent } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
-import { ChatCompletionMessageParam } from 'openai/resources/chat';
 import { OpenaiService } from '../libs/openai';
+import { SlackMessageMapper } from './mapper/slackMessage.mapper';
 
 @SlackController()
 export class GptController {
@@ -13,26 +13,19 @@ export class GptController {
     @Event() event: AppMentionEvent,
     @Client() client: WebClient,
   ) {
-    const threadTs = event.thread_ts || event.ts;
+    const threadId = event.thread_ts || event.ts;
 
-    const result = await client.conversations.replies({
+    const threads = await client.conversations.replies({
       channel: event.channel,
-      ts: threadTs,
+      ts: threadId,
     });
 
-    if (result.messages === undefined) {
+    if (threads.messages === undefined) {
       return;
     }
-    const messages: ChatCompletionMessageParam[] = result.messages
-      .map((messagePayload) => {
-        if (messagePayload.display_as_bot) {
-          return { role: 'assistant', content: messagePayload.text };
-        }
-        return { role: 'user', content: messagePayload.text };
-      })
-      .filter((m) => m.content) as ChatCompletionMessageParam[];
+    const prompt = SlackMessageMapper.toGPTPrompt(threads.messages);
 
-    const response = await this.openaiService.askGPT(messages);
+    const response = await this.openaiService.askGPT(prompt);
 
     await client.chat.postMessage({
       channel: event.channel,
