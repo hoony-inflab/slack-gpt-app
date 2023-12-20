@@ -3,7 +3,8 @@ export type SlackArgumentType =
   | typeof SAY
   | typeof RESPOND
   | typeof EVENT
-  | typeof CLIENT;
+  | typeof CLIENT
+  | typeof ACK;
 export const PAYLOAD = Symbol('PAYLOAD');
 
 export function Payload(): ParameterDecorator {
@@ -41,5 +42,13 @@ export const CLIENT = Symbol.for('CLIENT');
 export function Client(): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
     Reflect.defineMetadata(CLIENT, parameterIndex, target, propertyKey);
+  };
+}
+
+export const ACK = Symbol('ACK');
+
+export function Ack(): ParameterDecorator {
+  return (target, propertyKey, parameterIndex) => {
+    Reflect.defineMetadata(ACK, parameterIndex, target, propertyKey);
   };
 }

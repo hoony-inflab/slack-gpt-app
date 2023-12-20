@@ -1,10 +1,5 @@
 import { MethodStrategy } from './method-strategy';
-import {
-  AUTO_ACK,
-  COMMAND,
-  EVENT_SUBSCRIPTION,
-  SlackMethod,
-} from '../decorator/slack-method';
+import { AUTO_ACK, COMMAND, SlackMethod } from '../decorator/slack-method';
 import { PAYLOAD, RESPOND, SAY } from '../decorator/slack-argument';
 import { SlackAdapter } from '../slack-adapter';
 import { HttpAdapterHost } from '@nestjs/core';

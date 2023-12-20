@@ -1,8 +1,15 @@
-import { PAYLOAD, SAY, SlackArgumentType } from '../decorator/slack-argument';
 import { Injectable } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+
+import {
+  CLIENT,
+  EVENT,
+  EVENT_SUBSCRIPTION,
+  PAYLOAD,
+  SAY,
+  SlackMethod,
+} from '../decorator';
 import { SlackAdapter } from '../slack-adapter';
-import { EVENT_SUBSCRIPTION, SlackMethod } from '../decorator/slack-method';
 import { MethodStrategy } from './method-strategy';
 
 @Injectable()
@@ -27,33 +34,61 @@ export class EventSubscriptionStrategy implements MethodStrategy {
     }
 
     const metadataKeys = Reflect.getMetadataKeys(slackController, methodName);
-    this.slackAdapter.event(eventName, async ({ payload, say }) => {
-      const args = [];
 
-      metadataKeys.forEach((key) => {
-        switch (key) {
-          case PAYLOAD: {
-            const index = Reflect.getMetadata(
-              PAYLOAD,
-              slackController,
-              methodName,
-            );
-            args[index] = payload;
-            break;
+    this.slackAdapter.event(
+      eventName,
+      async ({ payload, client, event, say }) => {
+        const args = [];
+
+        metadataKeys.forEach((key) => {
+          switch (key) {
+            case PAYLOAD: {
+              const index = Reflect.getMetadata(
+                PAYLOAD,
+                slackController,
+                methodName,
+              );
+              args[index] = payload;
+              break;
+            }
+
+            case SAY: {
+              const index = Reflect.getMetadata(
+                SAY,
+                slackController,
+                methodName,
+              );
+              args[index] = say;
+              break;
+            }
+
+            case EVENT: {
+              const index = Reflect.getMetadata(
+                EVENT,
+                slackController,
+                methodName,
+              );
+              args[index] = event;
+              break;
+            }
+
+            case CLIENT: {
+              const index = Reflect.getMetadata(
+                CLIENT,
+                slackController,
+                methodName,
+              );
+              args[index] = client;
+              break;
+            }
+            default:
+              break;
           }
+        });
 
-          case SAY: {
-            const index = Reflect.getMetadata(SAY, slackController, methodName);
-            args[index] = say;
-            break;
-          }
-          default:
-            break;
-        }
-      });
-
-      await slackController[methodName](...args);
-    });
+        await slackController[methodName](...args);
+      },
+    );
   }
 
   support(slackMethod: SlackMethod) {

@@ -1,4 +1,13 @@
 import {
+  AckFn,
+  ReactionAddedEvent,
+  RespondArguments,
+  RespondFn,
+  SayFn,
+  SlashCommand,
+} from '@slack/bolt';
+
+import {
   Command,
   EventSubscription,
   Payload,
@@ -6,12 +15,6 @@ import {
   Say,
   SlackController,
 } from '../slack';
-import {
-  ReactionAddedEvent,
-  RespondFn,
-  SayFn,
-  SlashCommand,
-} from '@slack/bolt';
 
 @SlackController()
 export class SampleController {
@@ -33,5 +36,14 @@ export class SampleController {
     await say('Hello Slack NestJS! - COMMAND');
 
     await respond('respond');
+  }
+
+  @Command('/ping', false)
+  async ping(
+    @Payload() payload: SlashCommand,
+    @Respond() ack: AckFn<string | RespondArguments>,
+  ) {
+    console.dir(payload, { depth: null });
+    await ack({ text: 'pong' });
   }
 }
