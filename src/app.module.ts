@@ -17,12 +17,14 @@ import {
 import { SampleModule } from './sample/sample.module';
 import { ConfigSchema } from './configuration/config.schema';
 import { OpenaiModule } from './libs/openai';
+import { GPTModule } from './gpt/gpt.module';
 
 @Module({
   imports: [
     OpenaiModule,
     DiscoveryModule,
     SampleModule,
+    GPTModule,
     ConfigModule.forRoot({
       validationSchema: ConfigSchema,
       isGlobal: true,

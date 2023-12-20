@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SlackAdapter } from './slack/slack-adapter';
+import { SlackAdapter } from './slack';
 
 async function bootstrap() {
   const app = await NestFactory.create(
@@ -13,4 +13,5 @@ async function bootstrap() {
   );
   await app.listen(3031);
 }
+
 bootstrap();
