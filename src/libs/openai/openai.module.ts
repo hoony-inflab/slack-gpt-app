@@ -7,8 +7,9 @@ import { AppConfigType } from '../../configuration/appConfig.type';
 
 @Module({
   providers: [
+    OpenaiService,
     {
-      provide: OpenaiService,
+      provide: OpenAI.name,
       inject: [ConfigService],
       useFactory: (configService: ConfigService<AppConfigType>) => {
         return new OpenAI({ apiKey: configService.get('OPENAI_API_KEY') });
